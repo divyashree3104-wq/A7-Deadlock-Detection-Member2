@@ -1,9 +1,226 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A7 | Deadlock Detection Lab</title><link rel="stylesheet" href="style.css"></head><body>
-<header><div class="brand"><b class="mark">A7</b><div><b>DEADLOCK DETECTION LAB</b><small>Operating Systems · Member 2</small></div></div><span class="status">● JAVA ENGINE ONLINE</span></header><main>
-<section class="hero"><div><p class="eyebrow">RESOURCE ALLOCATION ANALYSIS</p><h1>Detect. Diagnose.<br><em>Understand.</em></h1><p>Explore multiple-instance deadlock detection with a live resource-allocation graph, animated algorithm trace, resource analytics and what-if experiments.</p></div><aside><small>ALGORITHM</small><h2>Work / Finish</h2><small>Multiple resource instances</small></aside></section>
-<section class="workspace"><section class="panel"><div class="head"><div><small>01 / INPUT DATA</small><h2>System state</h2></div><label class="tag">EDITABLE</label></div><label>Available vector <small>Comma-separated resource instances</small></label><input id="available" value="0, 0"><div class="matrix-title"><label>Allocation matrix</label><label>Request matrix</label></div><div class="matrix"><textarea id="allocation" rows="4">1, 0
-0, 1</textarea><textarea id="request" rows="4">0, 1
-1, 0</textarea></div><div class="actions"><button id="detect">Run detection ↗</button><button id="reset" class="secondary">Reset sample</button></div><div class="samples">LOAD SCENARIO <button data-case="deadlock">Circular wait</button><button data-case="safe">Resolvable</button><button data-case="partial">Partial finish</button></div><p class="hint">Edit values and run again to test a what-if scenario. Keep matrix dimensions consistent.</p></section>
-<section class="panel"><div class="head"><div><small>02 / ANALYSIS</small><h2>Detection result</h2></div><label class="tag">LIVE OUTPUT</label></div><div id="verdict" class="verdict">Awaiting analysis — run detection.</div><div class="metrics"><div><small>DEADLOCKED PROCESSES</small><b id="deadlocked">—</b></div><div><small>COMPLETION ORDER</small><b id="order">—</b></div><div><small>FINAL WORK</small><b id="work">—</b></div></div><div class="tracehead"><h3>Animated algorithm trace</h3><div><button id="play" class="secondary" disabled>▶ Play</button><button id="all" class="secondary" disabled>Show all</button></div></div><div id="trace" class="trace">Algorithm steps appear here.</div><div id="whatif" class="whatif"><b>What-if comparison</b><p>Run once, change the input and run again to compare outcomes.</p></div></section></section>
-<section class="panel visual"><div class="head"><div><small>03 / VISUAL EXPLORER</small><h2>Resource Allocation Graph</h2></div><label class="tag">LIVE GRAPH</label></div><p class="legend">━ Allocation: Resource → Process　　┄ Request: Process → Resource</p><div id="graph">Graph will be generated after detection.</div><p class="hint">For multiple instances, a cycle alone is not conclusive. The Work/Finish algorithm result is authoritative.</p></section>
-<section class="panel visual"><div class="head"><div><small>04 / RESOURCE ANALYTICS</small><h2>Resource utilisation</h2></div><label class="tag">LIVE CALCULATION</label></div><div id="analytics">Run detection to calculate resource totals.</div></section><footer>A7 · DEADLOCK DETECTION AND RECOVERY SIMULATOR <span>Member 2 — Detection module</span></footer></main><script src="app.js"></script></body></html>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>A7 | Deadlock Detection Lab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <b class="mark">A7</b>
+        <div>
+            <b>DEADLOCK DETECTION LAB</b>
+            <small>Operating Systems · Member 2</small>
+        </div>
+    </div>
+    <span class="status">● JAVA ENGINE ONLINE</span>
+</header>
+
+<main>
+
+<section class="hero">
+    <div>
+        <p class="eyebrow">RESOURCE ALLOCATION ANALYSIS</p>
+        <h1>Detect. Diagnose.<br><em>Understand.</em></h1>
+        <p>
+            Explore multiple-instance deadlock detection with a live
+            resource-allocation graph, animated algorithm trace,
+            resource analytics and recovery experiments.
+        </p>
+    </div>
+    <aside>
+        <small>ALGORITHM</small>
+        <h2>Work / Finish</h2>
+        <small>Multiple resource instances</small>
+    </aside>
+</section>
+
+<section class="workspace">
+
+    <section class="panel">
+        <div class="head">
+            <div>
+                <small>01 / INPUT DATA</small>
+                <h2>System state</h2>
+            </div>
+            <label class="tag">EDITABLE</label>
+        </div>
+
+        <label>
+            Available vector
+            <small>Comma-separated resource instances</small>
+        </label>
+
+        <input id="available" value="0, 0">
+
+        <div class="matrix-title">
+            <label>Allocation matrix</label>
+            <label>Request matrix</label>
+        </div>
+
+        <div class="matrix">
+            <textarea id="allocation" rows="4">1, 0
+0, 1</textarea>
+
+            <textarea id="request" rows="4">0, 1
+1, 0</textarea>
+        </div>
+
+        <div class="actions">
+            <button id="detect">Run detection ↗</button>
+            <button id="reset" class="secondary">Reset sample</button>
+        </div>
+
+        <div class="samples">
+            LOAD SCENARIO
+            <button data-case="deadlock">Circular wait</button>
+            <button data-case="safe">Resolvable</button>
+            <button data-case="partial">Partial finish</button>
+        </div>
+
+        <p class="hint">
+            Edit values and run again to test a what-if scenario.
+            Keep matrix dimensions consistent.
+        </p>
+    </section>
+
+    <section class="panel">
+        <div class="head">
+            <div>
+                <small>02 / ANALYSIS</small>
+                <h2>Detection result</h2>
+            </div>
+            <label class="tag">LIVE OUTPUT</label>
+        </div>
+
+        <div id="verdict" class="verdict">
+            Awaiting analysis — run detection.
+        </div>
+
+        <div class="metrics">
+            <div>
+                <small>DEADLOCKED PROCESSES</small>
+                <b id="deadlocked">—</b>
+            </div>
+            <div>
+                <small>COMPLETION ORDER</small>
+                <b id="order">—</b>
+            </div>
+            <div>
+                <small>FINAL WORK</small>
+                <b id="work">—</b>
+            </div>
+        </div>
+
+        <div class="tracehead">
+            <h3>Animated algorithm trace</h3>
+            <div>
+                <button id="play" class="secondary" disabled>▶ Play</button>
+                <button id="all" class="secondary" disabled>Show all</button>
+            </div>
+        </div>
+
+        <div id="trace" class="trace">
+            Algorithm steps appear here.
+        </div>
+
+        <div id="whatif" class="whatif">
+            <b>What-if comparison</b>
+            <p>
+                Run once, change the input and run again to compare outcomes.
+            </p>
+        </div>
+    </section>
+
+</section>
+
+<section class="panel visual">
+    <div class="head">
+        <div>
+            <small>03 / VISUAL EXPLORER</small>
+            <h2>Resource Allocation Graph</h2>
+        </div>
+        <label class="tag">LIVE GRAPH</label>
+    </div>
+
+    <p class="legend">
+        ━ Allocation: Resource → Process
+        ┄ Request: Process → Resource
+    </p>
+
+    <div id="graph">
+        Graph will be generated after detection.
+    </div>
+
+    <p class="hint">
+        For multiple instances, a cycle alone is not conclusive.
+        The Work/Finish algorithm result is authoritative.
+    </p>
+</section>
+
+<section class="panel visual">
+    <div class="head">
+        <div>
+            <small>04 / RESOURCE ANALYTICS</small>
+            <h2>Resource utilisation</h2>
+        </div>
+        <label class="tag">LIVE CALCULATION</label>
+    </div>
+
+    <div id="analytics">
+        Run detection to calculate resource totals.
+    </div>
+</section>
+
+<!-- NEW RECOVERY SECTION -->
+
+<section class="panel visual">
+    <div class="head">
+        <div>
+            <small>05 / DEADLOCK RECOVERY</small>
+            <h2>Recover system</h2>
+        </div>
+        <label class="tag">RECOVERY MODULE</label>
+    </div>
+
+    <p class="hint">
+        First run deadlock detection. If a deadlock is found,
+        choose a recovery method and select a deadlocked process.
+    </p>
+
+    <label for="recoveryMethod">Recovery method</label>
+    <select id="recoveryMethod">
+        <option value="termination">Process Termination</option>
+        <option value="preemption">Resource Preemption</option>
+    </select>
+
+    <br><br>
+
+    <label for="victim">Victim process</label>
+    <select id="victim">
+        <option value="">Run detection first</option>
+    </select>
+
+    <div class="actions">
+        <button id="recover" disabled>Run recovery ↗</button>
+    </div>
+
+    <div id="recoveryResult" class="verdict">
+        Recovery results will appear here.
+    </div>
+</section>
+
+<footer>
+    A7 · DEADLOCK DETECTION AND RECOVERY SIMULATOR
+    <span>Member 2 — Detection module</span>
+</footer>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
