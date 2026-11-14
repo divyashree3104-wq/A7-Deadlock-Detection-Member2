@@ -1,0 +1,17 @@
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.iml
+
+# Java build output (if backend is later added here)
+*.class
+bin/
+target/
+build/
+
+# Logs
+*.log

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Deadlock Detection and Recovery Simulator">
+  <title>Deadlock Detection & Recovery Simulator</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/deadlock.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-mark">D</span><span>Deadlock<span class="brand-light">Lab</span></span></a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#setup">Simulation</a>
+      <a href="#results">Results</a>
+      <a href="#about">About</a>
+    </nav>
+    <a class="topbar-cta" href="#setup">Start simulation <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> OPERATING SYSTEMS · PBL PROJECT</div>
+        <h1>Understand deadlocks.<br><span>See how systems recover.</span></h1>
+        <p class="hero-description">An interactive simulator to explore resource allocation, detect deadlocked processes, and demonstrate recovery techniques.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#setup">Start simulation <span aria-hidden="true">→</span></a>
+          <a class="button button-secondary" href="#about">Explore the project</a>
+        </div>
+        <div class="hero-note"><span class="note-icon">✓</span> Educational simulation · No real system processes are affected</div>
+      </div>
+      <div class="hero-visual" aria-label="Illustration of processes requesting resources">
+        <div class="visual-top"><span>RESOURCE ALLOCATION GRAPH</span><span class="live-tag">● LIVE DEMO</span></div>
+        <div class="graph">
+          <div class="node process p1">P1</div><div class="node resource r1">R1</div>
+          <div class="node process p2">P2</div><div class="node resource r2">R2</div>
+          <div class="node process p3">P3</div><div class="node resource r3">R3</div>
+          <div class="graph-line line-a"></div><div class="graph-line line-b"></div>
+          <div class="graph-line line-c"></div><div class="graph-line line-d"></div>
+          <div class="graph-center">↻<small>WAIT CYCLE</small></div>
+        </div>
+        <div class="visual-footer"><span><i class="legend-dot teal"></i> Process</span><span><i class="legend-dot purple"></i> Resource</span><span><i class="legend-dot orange"></i> Request / allocation</span></div>
+      </div>
+    </section>
+
+    <section class="stats-strip" aria-label="Project features">
+      <div><strong>01</strong><span>Enter system data</span></div>
+      <div><strong>02</strong><span>Run detection</span></div>
+      <div><strong>03</strong><span>Inspect results</span></div>
+      <div><strong>04</strong><span>Demonstrate recovery</span></div>
+    </section>
+
+    <section class="section" id="setup">
+      <div class="section-heading">
+        <div><div class="eyebrow">SIMULATION WORKSPACE</div><h2>Configure your system</h2></div>
+        <p>Enter the process and resource information. You can use the sample data to try the simulator first.</p>
+      </div>
+
+      <div class="workspace-grid">
+        <div class="panel setup-panel">
+          <div class="panel-heading"><div><span class="step-label">STEP 01</span><h3>System configuration</h3></div><span class="panel-icon">⚙</span></div>
+          <div class="count-grid">
+            <label>Number of processes
+              <input id="processCount" type="number" min="1" max="8" value="3">
+            </label>
+            <label>Resource types
+              <input id="resourceCount" type="number" min="1" max="6" value="2">
+            </label>
+          </div>
+          <div class="matrix-title"><h4>Allocation matrix</h4><span>Resources currently held by each process</span></div>
+          <div id="allocationContainer" class="matrix-wrap"></div>
+          <div class="matrix-title"><h4>Request matrix</h4><span>Additional resources each process is requesting</span></div>
+          <div id="requestContainer" class="matrix-wrap"></div>
+          <div class="matrix-title"><h4>Available resources</h4><span>Currently free resource instances</span></div>
+          <div id="availableContainer" class="matrix-wrap"></div>
+          <div class="form-actions">
+            <button class="button button-secondary" id="sampleBtn" type="button">↻ Load sample data</button>
+            <button class="button button-primary" id="detectBtn" type="button">Detect deadlock <span>→</span></button>
+          </div>
+          <p class="small-help">Use whole numbers (0 or greater). For this first version, each resource type can have multiple instances.</p>
+        </div>
+
+        <aside class="panel guide-panel">
+          <span class="step-label">HOW IT WORKS</span>
+          <h3>What do these values mean?</h3>
+          <div class="guide-item"><span class="guide-number">A</span><div><strong>Allocation</strong><p>How many instances of each resource are currently assigned to a process.</p></div></div>
+          <div class="guide-item"><span class="guide-number">R</span><div><strong>Request</strong><p>How many additional instances of each resource a process is waiting for.</p></div></div>
+          <div class="guide-item"><span class="guide-number">V</span><div><strong>Available</strong><p>How many free instances of each resource are currently available.</p></div></div>
+          <div class="tip-box"><strong>Remember</strong><p>A process can finish when its outstanding request can be satisfied by the currently available resources. When it finishes, it releases its allocation.</p></div>
+          <button class="text-button" id="resetBtn" type="button">Reset all inputs ↗</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section results-section" id="results">
+      <div class="section-heading">
+        <div><div class="eyebrow">SIMULATION OUTPUT</div><h2>Detection results</h2></div>
+        <p>The result area updates after you run the detection algorithm.</p>
+      </div>
+      <div id="emptyResults" class="empty-state">
+        <div class="empty-icon">⌁</div><h3>Waiting for a simulation</h3>
+        <p>Configure your matrices above, then select <strong>Detect deadlock</strong> to see the result here.</p>
+      </div>
+      <div id="resultContent" class="hidden">
+        <div class="result-summary panel">
+          <div><span class="step-label">SYSTEM STATUS</span><h3 id="statusTitle">—</h3><p id="statusDescription">—</p></div>
+          <span id="statusBadge" class="status-badge">NOT RUN</span>
+        </div>
+        <div class="result-grid">
+          <div class="panel result-card"><span class="step-label">COMPLETION ORDER</span><h3 id="sequenceValue">—</h3><p>Processes that could finish in this detection run.</p></div>
+          <div class="panel result-card"><span class="step-label">UNFINISHED PROCESSES</span><h3 id="deadlockedValue">—</h3><p>Processes remaining unfinished after detection.</p></div>
+        </div>
+        <div class="panel recovery-panel">
+          <div class="panel-heading"><div><span class="step-label">STEP 02</span><h3>Recovery demonstration</h3></div><span class="panel-icon">⟲</span></div>
+          <p class="recovery-intro">For this frontend demo, choose an unfinished process to terminate. Its allocated resources will be returned to the available pool, and detection will run again.</p>
+          <div class="recovery-controls">
+            <label for="processToTerminate">Process to terminate</label>
+            <select id="processToTerminate" disabled><option value="">Run detection first</option></select>
+            <button class="button button-primary" id="recoverBtn" type="button" disabled>Recover system →</button>
+          </div>
+          <div id="recoveryMessage" class="recovery-message hidden" role="status"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about-section" id="about">
+      <div class="about-copy"><div class="eyebrow">ABOUT THE PROJECT</div><h2>Learn by experimenting.</h2><p>This project demonstrates operating-system deadlock detection and recovery using process/resource matrices. Change the input values and observe how resource availability affects process completion.</p></div>
+      <div class="about-points"><div><strong>Detection</strong><span>Identify processes that cannot complete.</span></div><div><strong>Recovery</strong><span>Demonstrate resource release by terminating a process.</span></div><div><strong>Visualization</strong><span>Present system status and completion order clearly.</span></div></div>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="#home"><span class="brand-mark">D</span><span>Deadlock<span class="brand-light">Lab</span></span></a><span>Deadlock Detection & Recovery Simulator · PBL Project</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
